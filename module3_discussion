@@ -1,0 +1,33 @@
+using System;
+
+public class Wine
+{
+    public decimal Price;
+    public int Year;
+    
+    public Wine(decimal price) => Price = price;
+    
+    public Wine(decimal price, int year) : this(price) => Year = year;
+}
+
+public class Champagne : Wine
+{
+  public string SweetLevel;
+
+  public Champagne(decimal price, int year, string sweetness) : base(price, year)
+  {
+    SweetLevel = sweetness;
+  }
+}
+
+class Program
+{
+  static void Main()
+  {
+    Champagne bubblyWine = new Champagne(79.99m, 2010, "Dry");
+
+    Console.WriteLine($"Year: {bubblyWine.Year}");
+    Console.WriteLine($"Price: ${bubblyWine.Price}");
+    Console.WriteLine($"Sweetness: {bubblyWine.SweetLevel}");
+  }
+}
