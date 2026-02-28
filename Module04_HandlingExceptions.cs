@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 class DivisionProgram
 {
@@ -36,6 +36,11 @@ class DivisionProgram
             catch (DivideByZeroException e)
             {
                 Console.WriteLine("\nERROR: Dividing by zero is not allowed; please enter another number for the second input.");
+                Console.WriteLine(errorMsgGeneric(e));
+            }
+            catch (OverflowException e)
+            {
+                Console.WriteLine("\nERROR: One or both numbers were too large, please enter smaller numbers.");
                 Console.WriteLine(errorMsgGeneric(e));
             }
             catch (Exception e)
