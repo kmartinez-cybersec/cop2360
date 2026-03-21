@@ -1,22 +1,21 @@
 using System;
-using System.Security.Cryptography.X509Certificates;
 
 class CollectionsProject
 {
 
-    public static Dictionary<int, string> keyValuePairs = new Dictionary<int, string>();
+    public static Dictionary<string, float> keyValuePairs = new Dictionary<string, float>();
     static void Main(string[] args)
     {
 
-     Console.WriteLine("Choose from the following options:" +
-            "\n 1 : Populate the dictionary" +
-            "\n 2 : Display dictionary contents" +
-            "\n 3 : Remove a key from the dictionary" +
-            "\n 4 : Add a new key and value" +
-            "\n 5 : Add a value to an existing key" +
-            "\n 6 : Sort the keys in the dictionary" +
-            "\n 7 : Quit program");
-        
+        Console.WriteLine("Choose from the following options:" +
+               "\n 1 : Populate the dictionary" +
+               "\n 2 : Display dictionary contents" +
+               "\n 3 : Remove a key from the dictionary" +
+               "\n 4 : Add a new key and value" +
+               "\n 5 : Add a value to an existing key" +
+               "\n 6 : Sort the keys in the dictionary" +
+               "\n 7 : Quit program");
+
         while (true)
         {
             string userSelected = Console.ReadLine();
@@ -51,6 +50,9 @@ class CollectionsProject
                     Console.WriteLine("Quitting...");
                     Environment.Exit(0);
                     break;
+                default:
+                    Console.WriteLine("Please enter a value from 1-7");
+                    break;
             }
         }
     }
@@ -60,20 +62,32 @@ class CollectionsProject
         // Adding elements
         try
         {
-            keyValuePairs.Add(1, "first");
+            keyValuePairs.Add("Star Wars: A New Hope", 8.6f);
+            keyValuePairs.Add("Star Wars: The Empire Strikes Back", 8.7f);
+            keyValuePairs.Add("Indiana Jones and the Raiders of the Lost Ark", 8.4f);
+            keyValuePairs.Add("Indiana Jones and the Last Crusade", 8.2f);
+            keyValuePairs.Add("The Godfather", 9.2f);
+            keyValuePairs.Add("Back to the Future", 8.5f);
+            keyValuePairs.Add("Jurassic Park", 8.1f);
+            keyValuePairs.Add("The Shining", 8.4f);
+            keyValuePairs.Add("Blade Runner", 8.1f);
+            keyValuePairs.Add("Alien", 8.5f);
+            keyValuePairs.Add("Pulp Fiction", 8.9f);
+            keyValuePairs.Add("The Shawshank Redemption", 9.3f);
         }
-        catch (ArgumentException e)
+        catch (ArgumentException)
         {
             Console.WriteLine("ERROR: You have already populated the dictionary with this data.");
         }
-        
+
     }
 
     static void DisplayDictionary() // Case 2
     {
         foreach (var ele in keyValuePairs)
         {
-            Console.WriteLine($"Key: {ele.Key}, Value: {ele.Value}");
+            Console.WriteLine($"\nMovie: {ele.Key}" +
+                $"\nRating: {ele.Value} out of 10");
         }
     }
 }
