@@ -126,7 +126,7 @@ class CollectionsProject
             catch(Exception ex)
             {
                 // Unexpected error
-                Console.WriteLine("An unexpected error has occured: "ex);
+                Console.WriteLine("An unexpected error has occured: " + ex);
             }
     }
     static void SortMovies() // Case 6
