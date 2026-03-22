@@ -18,40 +18,39 @@ class CollectionsProject
 
         while (true)
         {
+            Console.Write("\nChoose an option from the list (enter 1-7):\n> ");
             string userSelected = Console.ReadLine();
 
             switch (userSelected)
             {
                 case "1":
-                    Console.WriteLine("Case 1");
+                    Console.WriteLine("Populating dictionary...");
                     PopulateDictionary();
                     break;
                 case "2":
-                    Console.WriteLine("Case 2");
+                    Console.WriteLine("Displaying dictionary...");
                     DisplayDictionary();
                     break;
                 case "3":
-                    Console.WriteLine("Case 3");
-                    // Remove a key
+                    RemoveKey();
                     break;
                 case "4":
-                    Console.WriteLine("Case 4");
                     NewMovieReview();
                     break;
                 case "5":
-                    Console.WriteLine("Case 5");
-                    // Append a value to an existing key
+                    ChangeValue();
                     break;
                 case "6":
-                    Console.WriteLine("Case 6");
+                    Console.WriteLine("Sorting movies by title...");
                     SortMovies();
+                    Console.WriteLine("Movies have been sorted, enter '2' to display ratings.");
                     break;
                 case "7":
                     Console.WriteLine("Quitting...");
                     Environment.Exit(0);
                     break;
                 default:
-                    Console.WriteLine("Please enter a value from 1-7");
+                    Console.WriteLine("Please enter a value from 1-7.");
                     break;
             }
         }
@@ -84,145 +83,149 @@ class CollectionsProject
 
     static void DisplayDictionary() // Case 2
     {
+        // Table header
+        Console.WriteLine($"\n{"Movie Name",-50} | {"Rating",10}");
+        Console.WriteLine(new string('-', 64));
+
+        // Table rows
         foreach (var ele in keyValuePairs)
         {
-            Console.WriteLine($"\nMovie: {ele.Key}" +
-                $"\nRating: {ele.Value} out of 10");
+            Console.WriteLine($"{ele.Key,-50} | {ele.Value,10:N1}");
         }
     }
 
-	static void RemoveKey()  //Case 3
-	{
-		// Removes key
-		try
-		{
-			// Prompts the user for the movie they would like to remove
-			Console.Write("Please enter the name of the movie you would like to remove:");
-			String removeMovie = Console.ReadLine();
+    static void RemoveKey()  //Case 3
+    {
+        // Removes key
+        try
+        {
+            // Prompts the user for the movie they would like to remove
+            Console.Write("Please enter the name of the movie you would like to remove:\n> ");
+            String removeMovie = Console.ReadLine();
 
-			// Check if a movie name was entered
-			if(string.IsNullOrWhiteSpace(removeMovie))
-			{
-				throw new Exception("No name was entered");
-			}
+            // Check if a movie name was entered
+            if (string.IsNullOrWhiteSpace(removeMovie))
+            {
+                throw new Exception("No name was entered");
+            }
 
-			// Creates boolan value to check if the movie entered was in the dictionary and if it was removed.
-			bool canBeRemoved = keyValuePairs.Remove(removeMovie);
-			if(!canBeRemoved)
-			{
-				Console.Write("That movie is not in the dictionary");
-			}
-			else
-			{
-				Console.Write("Movie removed successfully");
-			}
-		}
-		catch(Exception a)
-		{
-			Console.Write(a.Message);
-		}
-		catch(Exception a)
-		{
-			Console.Write("An unexpected error has occured: " + a);
-		}
-	}
+            // Creates boolan value to check if the movie entered was in the dictionary and if it was removed.
+            bool canBeRemoved = keyValuePairs.Remove(removeMovie);
+            if (!canBeRemoved)
+            {
+                Console.WriteLine("That movie is not in the dictionary.");
+            }
+            else
+            {
+                Console.WriteLine("Movie removed successfully.");
+            }
+        }
+        catch (Exception a)
+        {
+            Console.WriteLine("An unexpected error has occured: " + a);
+        }
+    }
 
     static void NewMovieReview() // Case 4
     {
-            // Adds new movie review
-            try
+        // Adds new movie review
+        try
+        {
+            // Prompts the user for the movie and rating they'd like to enter
+            Console.Write("Please type the name of the movie you would like to add:\n> ");
+            String newMovie = Console.ReadLine();
+            Console.Write("Please type the corresponding rating on a scale of 0-10 to give the movie:\n> ");
+            float newRating = float.Parse(Console.ReadLine());
+
+            // Checks if rating is within acceptable values
+            if (newRating > 10.0)
             {
-                // Prompts the user for the movie and rating they'd like to enter
-                Console.Write("Please type the name of the movie you would like to add: "); 
-                String newMovie = Console.ReadLine();
-                Console.Write("Please type the corresponding rating on a scale of 0-10 to give the movie: ");
-                float newRating = float.Parse(Console.ReadLine());
-                
-                // Checks if rating is within acceptable values
-                if (newRating > 10.0)
+                throw new ArgumentOutOfRangeException("Rating cannot be greater than 10");
+            }
+            if (newRating < 0.0)
+            {
+                throw new ArgumentOutOfRangeException("Rating cannot be less than 0");
+            }
+            else
+            {
+                Console.WriteLine("Movie successfully added to review list.");
+            }
+
+                keyValuePairs.Add(newMovie, newRating);
+        }
+        catch (ArgumentOutOfRangeException a)
+        {
+            // Exception thrown if rating is less than 0 or greater than 10
+            Console.WriteLine(a.Message);
+        }
+        catch (ArgumentException)
+        {
+            // Exception thrown if movie has already been reviewed
+            Console.WriteLine("The movie you entered has already been reviewed");
+        }
+        catch (Exception ex)
+        {
+            // Unexpected error
+            Console.WriteLine("An unexpected error has occured: " + ex);
+        }
+    }
+
+    static void ChangeValue() // Case 5
+    {
+        // Changes a value for a key
+        try
+        {
+            // Gets name of movie and checks if the movie is in the dictionary
+            Console.Write("Please enter the name of the movie you would like to change the rating of:\n> ");
+            String movieChange = Console.ReadLine();
+            if (keyValuePairs.ContainsKey(movieChange))
+            {
+                // Gets the new rating for that movie and checks if the rating is valid
+                Console.Write("Please enter the rating you would like to give the movie " + movieChange + ":\n> ");
+                float updatedRating = float.Parse(Console.ReadLine());
+
+                // Checks if the rating is valid
+                if (updatedRating > 10.0)
                 {
                     throw new ArgumentOutOfRangeException("Rating cannot be greater than 10");
                 }
-                if (newRating < 0.0)
+                if (updatedRating < 0.0)
                 {
                     throw new ArgumentOutOfRangeException("Rating cannot be less than 0");
                 }
 
-                keyValuePairs.Add(newMovie, newRating); 
+                // Updates the rating
+                keyValuePairs[movieChange] = updatedRating;
             }
-            catch(ArgumentOutOfRangeException a)
+            else
             {
-                // Exception thrown if rating is less than 0 or greater than 10
-                Console.WriteLine(a.Message); 
+                Console.WriteLine("Movie could not be found");
             }
-            catch (ArgumentException)
-            {
-                // Exception thrown if movie has already been reviewed
-                Console.WriteLine("The movie you entered has already been reviewed"); 
-            }
-            catch(Exception ex)
-            {
-                // Unexpected error
-                Console.WriteLine("An unexpected error has occured: " + ex);
-            }
+        }
+        catch (ArgumentOutOfRangeException a)
+        {
+            // Exception thrown if rating is less than 0 or greater than 10
+            Console.WriteLine(a.Message);
+        }
+        catch (Exception a)
+        {
+            Console.WriteLine("An unexpected error has occured " + a);
+        }
     }
-
-	static void changeValue() // Case 5
-	{
-		// Changes a value for a key
-		try
-		{
-			// Gets name of movie and checks if the movie is in the dictionary
-			Console.Write("Please enter the name of the movie you would like to change the rating of:");
-			String movieChange = Console.ReadLine();
-			if(keyValuePairs.ContainsKey(movieChange))
-			{
-				// Gets the new rating for that movie and checks if the rating is valid
-				Console.Write("Please enter the rating you would like to give the movie " + movieChange + ":");
-				float updatedRating = float.Parse(Console.ReadLine());
-
-				// Checks if the rating is valid
-				if(updatedRating > 10.0)
-				{
-					throw new ArgumentOutOfRangeException("Rating cannot be greater than 10");
-				}
-				if(updatedRating < 0.0)
-				{
-					throw new ArgumentOutOfRangeException("Rating cannot be less than 0");
-				}
-
-				// Updates the rating
-				keyValuePairs[movieChange] = updatedRating;
-			}
-			else
-			{
-				Console.Write("Movie could not be found");
-			}
-		}
-		catch(ArgumentOutOfRangeException a)
-		{
-			// Exception thrown if rating is less than 0 or greater than 10
-			Console.WriteLine(a.Message);
-		}
-		catch(Exception a)
-		{
-			Console.WriteLine("An unexpected error has occured " + a);
-		}
-	}
 
     static void SortMovies() // Case 6
     {
         // Sorts movies from A-Z and their corresponding ratings
         try
         {
-            Dictionary<string, float> orderedMovies = new Dictionary<string, float>{};
+            Dictionary<string, float> orderedMovies = new Dictionary<string, float> { };
             foreach (var key in keyValuePairs.Keys.OrderBy(k => k))
-                orderedMovies.Add(key, keyValuePairs [key]);
+                orderedMovies.Add(key, keyValuePairs[key]);
             keyValuePairs = orderedMovies;
         }
-        catch(ArgumentException ex)
+        catch (ArgumentException ex)
         {
-            Console.WriteLine("An unexpected error has occured: " + ex);
+            Console.WriteLine("An unexpected error has occurred: " + ex);
         }
     }
 }
