@@ -90,6 +90,43 @@ class CollectionsProject
                 $"\nRating: {ele.Value} out of 10");
         }
     }
+
+	static void RemoveKey()  //Case 3
+	{
+		// Removes key
+		try
+		{
+			// Prompts the user for the movie they would like to remove
+			Console.Write("Please enter the name of the movie you would like to remove:");
+			String removeMovie = Console.ReadLine();
+
+			// Check if a movie name was entered
+			if(string.IsNullOrWhiteSpace(removeMovie))
+			{
+				throw new Exception("No name was entered");
+			}
+
+			// Creates boolan value to check if the movie entered was in the dictionary and if it was removed.
+			bool canBeRemoved = keyValuePairs.Remove(removeMovie);
+			if(!canBeRemoved)
+			{
+				Console.Write("That movie is not in the dictionary");
+			}
+			else
+			{
+				Console.Write("Movie removed successfully");
+			}
+		}
+		catch(Exception a)
+		{
+			Console.Write(a.Message);
+		}
+		catch(Exception a)
+		{
+			Console.Write("An unexpected error has occured: " + a);
+		}
+	}
+
     static void NewMovieReview() // Case 4
     {
             // Adds new movie review
@@ -129,6 +166,50 @@ class CollectionsProject
                 Console.WriteLine("An unexpected error has occured: " + ex);
             }
     }
+
+	static void changeValue() // Case 5
+	{
+		// Changes a value for a key
+		try
+		{
+			// Gets name of movie and checks if the movie is in the dictionary
+			Console.Write("Please enter the name of the movie you would like to change the rating of:");
+			String movieChange = Console.ReadLine();
+			if(keyValuePairs.ContainsKey(movieChange))
+			{
+				// Gets the new rating for that movie and checks if the rating is valid
+				Console.Write("Please enter the rating you would like to give the movie " + movieChange + ":");
+				float updatedRating = float.Parse(Console.ReadLine());
+
+				// Checks if the rating is valid
+				if(updatedRating > 10.0)
+				{
+					throw new ArgumentOutOfRangeException("Rating cannot be greater than 10");
+				}
+				if(updatedRating < 0.0)
+				{
+					throw new ArgumentOutOfRangeException("Rating cannot be less than 0");
+				}
+
+				// Updates the rating
+				keyValuePairs[movieChange] = updatedRating;
+			}
+			else
+			{
+				Console.Write("Movie could not be found");
+			}
+		}
+		catch(ArgumentOutOfRangeException a)
+		{
+			// Exception thrown if rating is less than 0 or greater than 10
+			Console.WriteLine(a.Message);
+		}
+		catch(Exception a)
+		{
+			Console.WriteLine("An unexpected error has occured " + a);
+		}
+	}
+
     static void SortMovies() // Case 6
     {
         // Sorts movies from A-Z and their corresponding ratings
