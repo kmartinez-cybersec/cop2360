@@ -90,12 +90,42 @@ public class Program
     static void AddSubcontractor(List<Subcontractor> list)
     {
         Console.WriteLine("Case 2 AddSubcontractor()");
-        list.Add(new Subcontractor("Tom Smith", 1, new DateOnly(2000, 1, 1), false, 20 ));
+        
+        Console.Write("Enter name: ");    
+        string name = Console.ReadLine();
+        
+        Console.Write("Enter ID: ");
+        int id = int.Parse(Console.ReadLine());
+        
+        Console.Write("Enter start date in this format (yyyy-mm-dd): ");
+        DateOnly startDate = DateOnly.Parse(Console.ReadLine());
+        
+        Console.Write("Enter shift type:");
+        int shiftType = int.Parse(Console.ReadLine());
+        
+        Console.Write("Enter your hourly rate: ");
+        double hourlyRate = double.Parse(Console.ReadLine());
+        
+        list.Add(new Subcontractor(name, id, startDate, shiftType == 2, hourlyRate));
+        
     }
 
     static void DeleteSubcontractor(List<Subcontractor> list)
     {
         Console.WriteLine("Case 3 DeleteSubcontractor()");
+        
+        Console.Write("Enter ID of contractor to delete: ");
+        int id = int.Parse(Console.ReadLine());
+        
+        var subcontractor = list.FirstOrDefault(s => s.Number == id);
+        
+        if(subcontractor == null) {
+            Console.Write("No subcontactor with that ID is in the list");
+            return;
+        }
+        
+        list.Remove(subcontractor);
+        Console.Write("Subcontractor removed from the list");
     }
 
     static void ModifySubcontractor(List<Subcontractor> list)
