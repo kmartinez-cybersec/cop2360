@@ -100,7 +100,83 @@ public class Program
 
     static void ModifySubcontractor(List<Subcontractor> list)
     {
-        Console.WriteLine("Case 4 ModifySubcontractor()");
+        int i = 0;
+        int toModify;
+        string modify;
+
+        Console.WriteLine("What is the ID number of the Contractor you would like to modify?");
+        Console.Write("> ");
+        toModify = int.Parse(Console.ReadLine()); //gets Id number of the contractor that is to be modified
+        while(i < list.Count){
+            if(list[i].Number == toModify){
+                Console.WriteLine("What would you like to modify?");
+                Console.WriteLine("Name | Start Date | Shift Time | Hourly Rate"); 
+                Console.Write("> ");
+                modify = Console.ReadLine().ToLower(); //takes the input making it lower case then checks for each possible outcome of name, start date, shift time, and hourly rate.
+                
+                if(modify == "name"){
+                    Console.WriteLine("What would you like to change the name to?");
+                    Console.Write("> ");
+                    list[i].Name = Console.ReadLine();
+                }
+                
+                if(modify == "start date" || modify == "date"){
+                    DateOnly current = list[i].StartDate;
+                    int year = current.Year;
+                    int month = current.Month;
+                    int day = current.Day;
+                    Console.WriteLine("Change: Year | Month | Day");
+                    Console.Write("> ");
+                    string part = Console.ReadLine().ToLower();
+                    if (part == "year")
+                    {
+                        Console.Write("New year: ");
+                        year = int.Parse(Console.ReadLine());
+                    }
+                    else if (part == "month")
+                    {
+                        Console.Write("New month: ");
+                        month = int.Parse(Console.ReadLine());
+                    }
+                    else if (part == "day")
+                    {
+                        Console.Write("New day: ");
+                        day = int.Parse(Console.ReadLine());
+                    }
+                    list[i].StartDate = new DateOnly(year, month, day);
+                }
+                
+                if(modify == "shift time" || modify == "time"){
+                    if(list[i].Shift == false){
+                        list[i].Shift = true;
+                        Console.WriteLine("The shift time has been changed to night.");
+                    }
+                    else if(list[i].Shift == true){
+                        list[i].Shift = false;
+                        Console.WriteLine("The shift time has been changed to day.");
+                    }
+                }
+                
+                if(modify == "hourly rate" || modify == "rate"){
+                    Console.WriteLine("What would you like to change the hourly rate to?");
+                    Console.Write("> ");
+                    list[i].HourlyRate = double.Parse(Console.ReadLine());
+                }
+                //checks to see if the user wishes to make more modifications
+                Console.WriteLine("What would you like to modify anything else? Y/N");
+                Console.Write("> ");
+                
+                string YesOrNo = Console.ReadLine().ToLower();
+                bool Continuing = (YesOrNo == "y" || YesOrNo == "yes");
+                if(Continuing){
+                    continue;
+                }
+                else{
+                    break;
+                }
+            }
+            i++;
+        }
     }
 
     static void ComputePay(List<Subcontractor> list)
