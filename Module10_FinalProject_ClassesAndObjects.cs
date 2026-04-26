@@ -87,22 +87,275 @@ public class Program
         Console.WriteLine(new string('-', 85) + "\n");
     }
 
-    static void AddSubcontractor(List<Subcontractor> list)
+    
+    static void AddSubcontractor(List<Subcontractor> list) // User is prompted for information for new user
     {
         Console.WriteLine("Case 2 AddSubcontractor()");
-        list.Add(new Subcontractor("Tom Smith", 1, new DateOnly(2000, 1, 1), false, 20 ));
+        
+        string name;
+        while (true)
+        {
+            try 
+            {
+                Console.WriteLine("Enter name: ");  
+                Console.Write("> ");
+                name = Console.ReadLine();
+                break;
+            }
+            catch 
+            {
+                Console.WriteLine("Inputted name must be a string. Try Again");
+                return;
+            }
+        }
+        
+        int id;
+        while (true)
+        {
+            try 
+            {
+                Console.WriteLine("Enter ID: ");
+                Console.Write("> ");
+                id = int.Parse(Console.ReadLine());
+                
+                foreach (Subcontractor s in list) 
+                {
+                    if (s.Number == id)
+                    {
+                        throw new InvalidOperationException("ID is alrady in use. Try Again.");
+                    }
+                }
+                break;
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("ID input should be an integer. NO other input accepted");
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        
+        DateOnly startDate;
+        while (true)
+        {
+            try 
+            {
+                Console.WriteLine("Enter start date in this format (yyyy-mm-dd): ");
+                Console.Write("> ");
+                startDate = DateOnly.Parse(Console.ReadLine());
+                break;
+            }
+            catch 
+            {
+                Console.WriteLine("Start Date input must be entered in this format: yyyy-mm-dd");
+            }
+        }
+        
+        bool shiftType;
+        while (true)
+        {
+            try 
+            {
+                Console.WriteLine("Enter options D or N for shift type");
+                Console.Write("> ");
+                string shift = Console.ReadLine();
+            
+                shiftType = false;
+                
+                if (!(!(shift.Equals("D")) || !(shift.Equals("N"))))
+                    throw new FormatException();
+                    
+                switch (shift)
+                {
+                    case "N":
+                        shiftType = false; // Doesn't do anything bc already default
+                        break;
+                    case "D":
+                        shiftType = true;
+                        break;
+                }
+                break;
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Shift input can only be a D or N. Try Again. ");
+            }
+        }
+        
+        double hourlyRate;
+        while (true)
+        {
+            try
+            {
+                Console.WriteLine("Enter your hourly rate: ");
+                Console.Write("> ");
+                hourlyRate = double.Parse(Console.ReadLine());
+                break;
+            }
+            catch
+            {
+                Console.WriteLine("Hourly Rate input must be a number. Try Again.");
+            }
+        }
+        
+        list.Add(new Subcontractor(name, id, startDate, shiftType, hourlyRate));
+        
     }
 
     static void DeleteSubcontractor(List<Subcontractor> list)
     {
         Console.WriteLine("Case 3 DeleteSubcontractor()");
+    
+        int id;
+    
+        while (true)
+        {
+            try
+            {
+                Console.Write("Enter ID of contractor to delete");
+                Console.Write("> ");
+                id = int.Parse(Console.ReadLine()!);
+    
+                Subcontractor subcontractor = null;
+                foreach (Subcontractor s in list) {
+                    if (s.Number == id) {
+                        subcontractor = s;
+                        break;
+                    }
+                }
+                if (subcontractor == null){
+                    Console.WriteLine("No subcontractor with that ID exists. Try Again.");
+                    continue; 
+                }
+    
+                list.Remove(subcontractor);
+                Console.WriteLine("Subcontractor removed from the list.");
+                break; 
+            }
+            catch
+            {
+                Console.WriteLine("ID must be a number. Try Again.");
+            }
+        }
     }
+
 
     static void ModifySubcontractor(List<Subcontractor> list)
     {
         Console.WriteLine("Case 4 ModifySubcontractor()");
+        int i = 0;
+        int toModify;
+        string modify;
+        
+        while (true)
+        {
+            try 
+            {
+                Console.WriteLine("What is the ID number of the Contractor you would like to modify?");
+                Console.Write("> ");
+                toModify = int.Parse(Console.ReadLine()); //gets Id number of the contractor that is to be modified
+                
+                bool exists = false;
+                
+                foreach (Subcontractor s in list)
+                {
+                    if (s.Number == toModify)
+                    {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    throw new InvalidOperationException("The ID entered is not in the list");
+                    continue;
+                }
+                    
+                break;
+                
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("The ID entered must be an integer. Try Again.");
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        
+        while(i < list.Count){
+            if(list[i].Number == toModify){
+                Console.WriteLine("What would you like to modify?");
+                Console.WriteLine("Name | Start Date | Shift Time | Hourly Rate"); 
+                Console.Write("> ");
+                modify = Console.ReadLine().ToLower(); //takes the input making it lower case then checks for each possible outcome of name, start date, shift time, and hourly rate.
+                
+                if(modify == "name"){
+                    Console.WriteLine("What would you like to change the name to?");
+                    Console.Write("> ");
+                    list[i].Name = Console.ReadLine();
+                }
+                
+                if(modify == "start date" || modify == "date"){
+                    DateOnly current = list[i].StartDate;
+                    int year = current.Year;
+                    int month = current.Month;
+                    int day = current.Day;
+                    Console.WriteLine("Change: Year | Month | Day");
+                    Console.Write("> ");
+                    string part = Console.ReadLine().ToLower();
+                    if (part == "year")
+                    {
+                        Console.Write("New year: ");
+                        year = int.Parse(Console.ReadLine());
+                    }
+                    else if (part == "month")
+                    {
+                        Console.Write("New month: ");
+                        month = int.Parse(Console.ReadLine());
+                    }
+                    else if (part == "day")
+                    {
+                        Console.Write("New day: ");
+                        day = int.Parse(Console.ReadLine());
+                    }
+                    list[i].StartDate = new DateOnly(year, month, day);
+                }
+                
+                if(modify == "shift time" || modify == "time"){
+                    if(list[i].Shift == false){
+                        list[i].Shift = true;
+                        Console.WriteLine("The shift time has been changed to night.");
+                    }
+                    else if(list[i].Shift == true){
+                        list[i].Shift = false;
+                        Console.WriteLine("The shift time has been changed to day.");
+                    }
+                }
+                
+                if(modify == "hourly rate" || modify == "rate"){
+                    Console.WriteLine("What would you like to change the hourly rate to?");
+                    Console.Write("> ");
+                    list[i].HourlyRate = double.Parse(Console.ReadLine());
+                }
+                //checks to see if the user wishes to make more modifications
+                Console.WriteLine("What would you like to modify anything else? Y/N");
+                Console.Write("> ");
+                
+                string YesOrNo = Console.ReadLine().ToLower();
+                bool Continuing = (YesOrNo == "y" || YesOrNo == "yes");
+                if(Continuing){
+                    continue;
+                }
+                else{
+                    break;
+                }
+            }
+            i++;
+        }
     }
-
     static void ComputePay(List<Subcontractor> list)
     {
         Console.WriteLine("How many hours has the team worked for?");
