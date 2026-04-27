@@ -4,12 +4,12 @@ using System;
 public class Contractor
 {
     public string Name
-        { get; set; }
+    { get; set; }
     public int Number // Phone number? Identifying number?
-        {  get; set; }
+    { get; set; }
     public DateOnly StartDate
-        { get; set; }
-    
+    { get; set; }
+
     // Constructor for Contractor (not really needed for the project but whatever)
     public Contractor(string name, int number, DateOnly startDate)
     {
@@ -22,9 +22,9 @@ public class Contractor
 public class Subcontractor : Contractor
 {
     public bool Shift
-        { get; set; }
+    { get; set; }
     public double HourlyRate
-        { get; set; }
+    { get; set; }
 
     // Constructor for Subcontractor (actually needed)
     public Subcontractor(string name, int number, DateOnly startDate, bool shift, double hourlyRate)
@@ -87,38 +87,38 @@ public class Program
         Console.WriteLine(new string('-', 85) + "\n");
     }
 
-    
+
     static void AddSubcontractor(List<Subcontractor> list) // User is prompted for information for new user
     {
         Console.WriteLine("Case 2 AddSubcontractor()");
-        
+
         string name;
         while (true)
         {
-            try 
+            try
             {
-                Console.WriteLine("Enter name: ");  
+                Console.WriteLine("Enter name: ");
                 Console.Write("> ");
                 name = Console.ReadLine();
                 break;
             }
-            catch 
+            catch
             {
                 Console.WriteLine("Inputted name must be a string. Try Again");
                 return;
             }
         }
-        
+
         int id;
         while (true)
         {
-            try 
+            try
             {
                 Console.WriteLine("Enter ID: ");
                 Console.Write("> ");
                 id = int.Parse(Console.ReadLine());
-                
-                foreach (Subcontractor s in list) 
+
+                foreach (Subcontractor s in list)
                 {
                     if (s.Number == id)
                     {
@@ -136,43 +136,43 @@ public class Program
                 Console.WriteLine(ex.Message);
             }
         }
-        
+
         DateOnly startDate;
         while (true)
         {
-            try 
+            try
             {
                 Console.WriteLine("Enter start date in this format (yyyy-mm-dd): ");
                 Console.Write("> ");
                 startDate = DateOnly.Parse(Console.ReadLine());
                 break;
             }
-            catch 
+            catch
             {
                 Console.WriteLine("Start Date input must be entered in this format: yyyy-mm-dd");
             }
         }
-        
+
         bool shiftType;
         while (true)
         {
-            try 
+            try
             {
                 Console.WriteLine("Enter options D or N for shift type");
                 Console.Write("> ");
                 string shift = Console.ReadLine();
-            
+
                 shiftType = false;
-                
+
                 if (!(!(shift.Equals("D")) || !(shift.Equals("N"))))
                     throw new FormatException();
-                    
+
                 switch (shift)
                 {
-                    case "N":
+                    case "D":
                         shiftType = false; // Doesn't do anything bc already default
                         break;
-                    case "D":
+                    case "N":
                         shiftType = true;
                         break;
                 }
@@ -183,7 +183,7 @@ public class Program
                 Console.WriteLine("Shift input can only be a D or N. Try Again. ");
             }
         }
-        
+
         double hourlyRate;
         while (true)
         {
@@ -199,40 +199,51 @@ public class Program
                 Console.WriteLine("Hourly Rate input must be a number. Try Again.");
             }
         }
-        
+
         list.Add(new Subcontractor(name, id, startDate, shiftType, hourlyRate));
-        
+
     }
 
     static void DeleteSubcontractor(List<Subcontractor> list)
     {
         Console.WriteLine("Case 3 DeleteSubcontractor()");
-    
-        int id;
-    
+
+        string stringSubToDelete;
+        int intSubToDelete;
+
         while (true)
         {
             try
             {
-                Console.Write("Enter ID of contractor to delete");
+                Console.WriteLine("Enter ID of contractor to delete (q to quit to main program)");
                 Console.Write("> ");
-                id = int.Parse(Console.ReadLine()!);
-    
+                stringSubToDelete = Console.ReadLine()!;
+
+                if (stringSubToDelete.ToLower() == "q" || stringSubToDelete.ToLower() == "quit")
+                {
+                    return;
+                }
+
+                intSubToDelete = int.Parse(stringSubToDelete!);
+
                 Subcontractor subcontractor = null;
-                foreach (Subcontractor s in list) {
-                    if (s.Number == id) {
+                foreach (Subcontractor s in list)
+                {
+                    if (s.Number == intSubToDelete)
+                    {
                         subcontractor = s;
                         break;
                     }
                 }
-                if (subcontractor == null){
+                if (subcontractor == null)
+                {
                     Console.WriteLine("No subcontractor with that ID exists. Try Again.");
-                    continue; 
+                    continue;
                 }
-    
+
                 list.Remove(subcontractor);
                 Console.WriteLine("Subcontractor removed from the list.");
-                break; 
+                break;
             }
             catch
             {
@@ -246,34 +257,42 @@ public class Program
     {
         Console.WriteLine("Case 4 ModifySubcontractor()");
         int i = 0;
-        int toModify;
+        string stringToModify;
+        int idToModify;
         string modify;
-        
+
         while (true)
         {
-            try 
+            try
             {
-                Console.WriteLine("What is the ID number of the Contractor you would like to modify?");
+                Console.WriteLine("What is the ID number of the Contractor you would like to modify? (q to quit to main program)");
                 Console.Write("> ");
-                toModify = int.Parse(Console.ReadLine()); //gets Id number of the contractor that is to be modified
-                
+                stringToModify = Console.ReadLine(); //gets Id number of the contractor that is to be modified
+
+                if (stringToModify.ToLower() == "q" || stringToModify.ToLower() == "quit")
+                {
+                    return;
+                }
+
+                idToModify = int.Parse(stringToModify);
                 bool exists = false;
-                
+
                 foreach (Subcontractor s in list)
                 {
-                    if (s.Number == toModify)
+                    if (s.Number == idToModify)
                     {
                         exists = true;
                         break;
                     }
                 }
-                if (!exists) {
+                if (!exists)
+                {
                     throw new InvalidOperationException("The ID entered is not in the list");
                     continue;
                 }
-                    
+
                 break;
-                
+
             }
             catch (FormatException)
             {
@@ -284,21 +303,25 @@ public class Program
                 Console.WriteLine(ex.Message);
             }
         }
-        
-        while(i < list.Count){
-            if(list[i].Number == toModify){
+
+        while (i < list.Count)
+        {
+            if (list[i].Number == idToModify)
+            {
                 Console.WriteLine("What would you like to modify?");
-                Console.WriteLine("Name | Start Date | Shift Time | Hourly Rate"); 
+                Console.WriteLine("Name | Start Date | Shift Time | Hourly Rate");
                 Console.Write("> ");
                 modify = Console.ReadLine().ToLower(); //takes the input making it lower case then checks for each possible outcome of name, start date, shift time, and hourly rate.
-                
-                if(modify == "name"){
+
+                if (modify == "name")
+                {
                     Console.WriteLine("What would you like to change the name to?");
                     Console.Write("> ");
                     list[i].Name = Console.ReadLine();
                 }
-                
-                if(modify == "start date" || modify == "date"){
+
+                if (modify == "start date" || modify == "date")
+                {
                     DateOnly current = list[i].StartDate;
                     int year = current.Year;
                     int month = current.Month;
@@ -323,33 +346,39 @@ public class Program
                     }
                     list[i].StartDate = new DateOnly(year, month, day);
                 }
-                
-                if(modify == "shift time" || modify == "time"){
-                    if(list[i].Shift == false){
+
+                if (modify == "shift time" || modify == "time")
+                {
+                    if (list[i].Shift == false)
+                    {
                         list[i].Shift = true;
                         Console.WriteLine("The shift time has been changed to night.");
                     }
-                    else if(list[i].Shift == true){
+                    else if (list[i].Shift == true)
+                    {
                         list[i].Shift = false;
                         Console.WriteLine("The shift time has been changed to day.");
                     }
                 }
-                
-                if(modify == "hourly rate" || modify == "rate"){
+
+                if (modify == "hourly rate" || modify == "rate")
+                {
                     Console.WriteLine("What would you like to change the hourly rate to?");
                     Console.Write("> ");
                     list[i].HourlyRate = double.Parse(Console.ReadLine());
                 }
                 //checks to see if the user wishes to make more modifications
-                Console.WriteLine("What would you like to modify anything else? Y/N");
+                Console.WriteLine("What would you like to modify anything else? y/N");
                 Console.Write("> ");
-                
+
                 string YesOrNo = Console.ReadLine().ToLower();
                 bool Continuing = (YesOrNo == "y" || YesOrNo == "yes");
-                if(Continuing){
+                if (Continuing)
+                {
                     continue;
                 }
-                else{
+                else
+                {
                     break;
                 }
             }
@@ -358,6 +387,7 @@ public class Program
     }
     static void ComputePay(List<Subcontractor> list)
     {
+        float totalPay = 0.0f;
         Console.WriteLine("How many hours has the team worked for?");
         Console.Write("> ");
         if (!int.TryParse(Console.ReadLine(), out int hoursWorked))
@@ -378,12 +408,16 @@ public class Program
 
             // Calculate pay
             float payMultiplier = sub.Shift ? 1.03f : 1.0f;
-            float totalPay = hoursWorked * Convert.ToSingle(sub.HourlyRate) * payMultiplier;
+            float subcontractorPay = hoursWorked * Convert.ToSingle(sub.HourlyRate) * payMultiplier;
+            totalPay += subcontractorPay;
 
             // Print row
-            Console.WriteLine($"{sub.Name,-25} | {totalPay,10:C}");
+            Console.WriteLine($"{sub.Name,-25} | {subcontractorPay,10:C}");
         }
         // Print footer
         Console.WriteLine(new string('-', 40));
+
+        // Print total pay
+        Console.WriteLine($"Total payout for the team: {totalPay:C}");
     }
 }
